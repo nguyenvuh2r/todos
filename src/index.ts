@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import { config as dotenv } from 'dotenv';
 
 //Routes
+import TodoRouter from './routes/Todo.router';
 
 class App {
   public app: Application;
@@ -22,6 +23,8 @@ class App {
     this.app.route('/').get((req: Request, res: Response) => {
       res.send('Api Todo List - v1.0.0');
     });
+
+    this.app.use('/api/todos', TodoRouter);
   }
 }
 

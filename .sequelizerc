@@ -11,7 +11,6 @@ if (process.env.NODE_ENV === 'production') {
     'migrations-path': path.resolve('./build/db', 'migrations'),
   };
 } else {
-  console.log('okei')
   module.exports = {
     config: path.resolve('src/config', 'database.js'),
     'models-path': path.resolve('src/db/models'),
