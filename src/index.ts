@@ -29,9 +29,9 @@ export class App {
   }
 }
 
-const port: number = Number(process.env.PORT) || 3000
-const app = new App().app;
+// const port: number = Number(process.env.PORT) || 3000
+// const app = new App().app;
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Server running on port ${port}`);
+// });
