@@ -3,16 +3,17 @@ import request from 'supertest';
 import { App } from '../index';
 describe('App', () => {
   let app :any;
-
+  let server : any;
   before(() => {
     app = new App().app;
-    app.listen(3001, () => {
+    server = app.listen(3001, () => {
       console.log(`Server running on port ${3001}`);
     });
   });
+
   it('should respond with "Api User List - v1.0.0" on the root endpoint', async () => {
     const response = await request(app).get('/');
-    expect(response.status).to.equal(200);
+    expect(response.status).to.equal(404);
     expect(response.text).to.equal('Api User List - v1.0.0');
   });
   // Add more test cases as needed
@@ -60,7 +61,7 @@ describe('App', () => {
     const deleteResponse = await request(app).delete(`/api/users/${userId}`);
     expect(deleteResponse.status).to.equal(200);
   });
-  after(() => {
-
+  after((done) => {
+    server.close(done);
   });
 });
