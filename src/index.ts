@@ -4,8 +4,8 @@ import { config as dotenv } from 'dotenv';
 
 //Routes
 import TodoRouter from './routes/Todo.router';
-
-class App {
+import UserRouter from './routes/User.router';
+export class App {
   public app: Application;
 
   constructor() {
@@ -25,6 +25,7 @@ class App {
     });
 
     this.app.use('/api/todos', TodoRouter);
+    this.app.use('/api/users', UserRouter);
   }
 }
 
