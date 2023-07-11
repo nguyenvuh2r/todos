@@ -35,7 +35,7 @@ class TodoService {
       where: {
         id: this.params.id,
       },
-      attributes: ['id', 'title', 'description', 'completed'],
+      attributes: ['id', 'title', 'description', 'isCompleted'],
     });
 
     return todo;
