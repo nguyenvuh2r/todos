@@ -1,16 +1,12 @@
 import { expect } from 'chai';
 import request from 'supertest';
-import { App } from '..';
+import { starServer } from '../app';
 
 describe('Todo API', () => {
   let app: any;
 
   before(() => {
-    app = new App().app;
-
-    app.listen(3001, () => {
-      console.log('Server running on port 3001');
-    });
+    app = starServer(3001)
   });
 
   it('should respond with "Api Todo List - v1.0.0" on the root endpoint', async () => {
@@ -43,7 +39,7 @@ describe('Todo API', () => {
     const createdTodoId = createResponse.body.data.id;
 
     const updateResponse = await request(app)
-      .put(`/todos/${createdTodoId}`)
+      .put(`/api/todos/${createdTodoId}`)
       .send({
         title: 'Updated Todo',
         description: 'Updated Description',
@@ -64,7 +60,7 @@ describe('Todo API', () => {
     expect(deleteResponse.status).to.equal(200);
   });
 
-  after(() => {
-    
+  after((done) => {
+    app.close(done);
   });
 });

@@ -44,7 +44,6 @@ class UserController {
           message: "Get User by id => " + user.id
       })
     } catch (error) {
-        console.log(error);
         return res.status(ERROR_CODE).send(error);
     }
   }
