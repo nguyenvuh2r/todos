@@ -5,10 +5,17 @@ class UserController {
   index = async (req: Request, res: Response): Promise<Response> => {
     try {
       const service: UserService = new UserService(req);
-      const users = await service.getAll();
-
+      const {count , rows} = await service.getAll();
+      const respone = {
+          data : rows,
+          pagination : {
+            total : count,
+            current_page : req.query.page ?? 1,
+            per_page : req.query.limit ?? 3
+          }
+      }
       return res.status(SUCCSESS_CODE).send({
-        data: users,
+        data: respone,
         message: "Success Get All Users List"
       });
     } catch (error) {

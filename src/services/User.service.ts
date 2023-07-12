@@ -18,12 +18,13 @@ class UserService {
     const page = parseInt(String(this.query.page)) || 1;
     const limit = parseInt(String(this.query.limit)) || 10;
 
-    const users = await DB.User.findAll({
+    const { count, rows } = await DB.User.findAndCountAll ({
       attributes: ['id', 'firstName', 'lastName', 'email'],
-      offset: page,
+      offset: page - 1 ,
       limit: limit,
     });
-    return users;
+
+    return { count, rows };
   }
 
   create = async () => {
