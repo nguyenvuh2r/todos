@@ -26,6 +26,19 @@ describe('Testing User Service', () => {
 
     });
 
+    it('should get users', async () => {
+        let page:number = 1;
+        let limit:number = 10;
+        const { count, rows } =  await userService.getAll(page,limit);
+        expect(rows).to.be.an('array');
+        expect(count).to.be.a('number');
+        if(count > 0)
+        {
+            expect(rows).to.have.lengthOf.at.least(1);
+        }
+    });
+
+
     it('should get one user', async () => {
         // create new
         const userData: UserInputDTO = {
