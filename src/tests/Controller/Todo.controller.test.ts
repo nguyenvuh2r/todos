@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import request from 'supertest';
-import { starServer } from '../app';
+import { starServer } from '../../app';
 
-describe('Todo API', () => {
+describe('Testing Todos API', () => {
   let app: any;
 
   before(() => {

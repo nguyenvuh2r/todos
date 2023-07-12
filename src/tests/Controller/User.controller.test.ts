@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import request from 'supertest';
-import { starServer } from '../app';
-describe('App', () => {
+import { starServer } from '../../app';
+describe('Testing User API', () => {
   let app :any;
   before(() => {
     app = starServer(3001)
