@@ -45,7 +45,7 @@ To set up the project, follow the steps below:
 
    This command will start the necessary containers, including the Express server and a MariaDB database.
 
-5. To test the project, open a new terminal window and execute the following command to access the Express container's bash shell:
+5. Open a new terminal window and execute the following command to access the Express container's bash shell:
 
    ```
    docker-compose exec express bash
