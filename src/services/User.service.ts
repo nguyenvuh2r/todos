@@ -3,13 +3,13 @@ import db from '../db/models';
 import { UserInputDTO } from "../DTO/UserInputDTO";
 class UserService {
   constructor(){
-    
+
   }
   getAll = async (page:number, limit:number) => {
     const DB: any = db;
     const { count, rows } = await DB.User.findAndCountAll ({
       attributes: ['id', 'firstName', 'lastName', 'email'],
-      offset: page - 1 ,
+      offset: ( page - 1) * limit ,
       limit: limit,
     });
     return { count, rows };
