@@ -53,14 +53,13 @@ To set up the project, follow the steps below:
 6. Once inside the container, run the following command to execute the migration:
 
    ```
-   npm test
+   npx sequelize-cli db:migrate
    ```
-
-   This will run the project's test suite and display the test results.
+   
 7. To run the following command to execute the tests :
 
    ```
-   npx sequelize-cli db:migrate
+   npm test
    ```
 
    This will run the project's test suite and display the test results.
