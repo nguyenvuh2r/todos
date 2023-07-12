@@ -5,6 +5,7 @@ import { config as dotenv } from 'dotenv';
 //Routes
 import TodoRouter from './routes/Todo.router';
 import UserRouter from './routes/User.router';
+import AuthRouter from './routes/Auth.router';
 export class App {
   public app: Application;
 
@@ -26,6 +27,7 @@ export class App {
 
     this.app.use('/api/todos', TodoRouter);
     this.app.use('/api/users', UserRouter);
+    this.app.use('/api/auth', AuthRouter);
   }
 }
 export const starServer = (port :number)=>{

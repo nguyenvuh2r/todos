@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import UserService from "../services/User.service";
 import { ERROR_CODE, NOT_FOUND_CODE, SUCCSESS_CODE } from "../const/status"
-import { UserInputDTO } from "../DTO/UserInputDTO";
+import { UserInput } from "../input/UserInput";
 
 class UserController {
   private userService: UserService;
@@ -27,13 +27,15 @@ class UserController {
         message: "Success Get All Users List"
       });
     } catch (error) {
-      return res.status(ERROR_CODE).send(error)
+         console.log(error);
+         
+         return res.status(ERROR_CODE).send(error)
     }
   }
 
   create = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const userInput: UserInputDTO = req.body;
+      const userInput: UserInput = req.body;
       const user = await this.userService.create(userInput);
       return res.status(SUCCSESS_CODE).send({
         data: user,
@@ -65,7 +67,7 @@ class UserController {
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
       const userId = req.params.id;
-      const userInput: UserInputDTO = req.body
+      const userInput: UserInput = req.body
       const user = await this.userService.update(userId, userInput);
       if (user === null) {
         return res.status(NOT_FOUND_CODE).send({

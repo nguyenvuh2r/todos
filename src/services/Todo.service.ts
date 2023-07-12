@@ -1,64 +1,50 @@
 import { Request } from "express";
 import db from '../db/models';
 import { Op } from "sequelize"
+import { TodoInput } from "../input/TodoInput";
 
 class TodoService {
-  body: Request['body'];
-  params: Request['params'];
-
-  constructor(req: Request) {
-    this.body = req.body;
-    this.params = req.params;
-  }
 
   getAll = async () => {
     const DB: any = db;
-
     const todos = await DB.Todo.findAll({
-      attributes: ['id', 'title', 'description', 'isCompleted']
+      attributes: ['id', 'title', 'description','userId', 'isCompleted']
     });
-
     return todos;
   }
 
-  create = async () => {
+  create = async (todoInput:TodoInput) => {
     const DB: any = db;
-    const todo = await DB.Todo.create(this.body);
-
+    const todo = await DB.Todo.create(todoInput);
     return todo;
   }
 
-  getOne = async () => {
+  getOne = async (id:string) => {
     const DB: any = db;
-
     const todo = await DB.Todo.findOne({
       where: {
-        id: this.params.id,
+        id: id,
       },
-      attributes: ['id', 'title', 'description', 'isCompleted'],
+      attributes: ['id', 'title', 'description','userId', 'isCompleted'],
     });
-
     return todo;
   }
 
-  update = async () => {
+  update = async (id:string, todoInput : TodoInput) => {
     const DB: any = db;
-
-    const todo = await DB.Todo.update(this.body, {
+    const todo = await DB.Todo.update(todoInput, {
       where: {
-          id: this.params.id,
+          id: id,
       },
     });
-
     return todo;
   }
 
-  delete = async () => {
+  delete = async (id:string) => {
     const DB: any = db;
-
     const todo = await DB.Todo.destroy({
       where: {
-          id: this.params.id,
+          id: id,
       },
     });
 
