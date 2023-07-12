@@ -50,14 +50,21 @@ To set up the project, follow the steps below:
    ```
    docker-compose exec express bash
    ```
-
-6. Once inside the container, run the following command to execute the tests:
+6. Once inside the container, run the following command to execute the migration:
 
    ```
    npm test
    ```
 
    This will run the project's test suite and display the test results.
+7. To run the following command to execute the tests :
+
+   ```
+   npx sequelize-cli db:migrate
+   ```
+
+   This will run the project's test suite and display the test results.
+   Notice run this inside the container
 
 ## API Documentation
 
