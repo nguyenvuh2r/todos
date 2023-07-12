@@ -1,43 +1,31 @@
 import { Request } from "express";
 import db from '../db/models';
-// import { Op } from "sequelize"
-
+import { UserInputDTO } from "../DTO/UserInputDTO";
 class UserService {
-  body: Request['body'];
-  params: Request['params'];
-  query: Request['query'];
-  constructor(req: Request) {
-    this.query = req.query;
-    this.body = req.body;
-    this.params = req.params;
+  constructor(){
+
   }
-
-  getAll = async () => {
+  getAll = async (page:number, limit:number) => {
     const DB: any = db;
- 
-    const page = parseInt(String(this.query.page)) || 1;
-    const limit = parseInt(String(this.query.limit)) || 10;
-
-    const users = await DB.User.findAll({
+    const { count, rows } = await DB.User.findAndCountAll ({
       attributes: ['id', 'firstName', 'lastName', 'email'],
-      offset: page,
+      offset: ( page - 1) * limit ,
       limit: limit,
     });
-    return users;
+    return { count, rows };
   }
 
-  create = async () => {
+  create = async (userInput: UserInputDTO) => {
     const DB: any = db;
-    const user = await DB.User.create(this.body);
-
+    const user = await DB.User.create(userInput);
     return user;
   }
 
-  getOne = async () => {
+  getOne = async (id:string) => {
     const DB: any = db;
     const user = await DB.User.findOne({
       where: {
-        id: this.params.id,
+        id: id,
       },
       attributes: ['id', 'firstName', 'lastName', 'email'],
     });
@@ -45,23 +33,23 @@ class UserService {
     return user;
   }
 
-  update = async () => {
+  update = async (id:string, userInput: UserInputDTO) => {
     const DB: any = db;
 
-    const user = await DB.User.update(this.body, {
+    const user = await DB.User.update(userInput, {
       where: {
-          id: this.params.id,
+          id: id,
       },
     });
 
     return user;
   }
 
-  delete = async () => {
+  delete = async (id:string) => {
     const DB: any = db;
     const user = await DB.User.destroy({
       where: {
-          id: this.params.id,
+          id: id,
       },
     });
     return user;
