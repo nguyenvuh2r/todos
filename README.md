@@ -73,6 +73,6 @@ The project exposes the following API endpoints for User:
 - `GET /api/users/:id` - Retrieve a specific user by its ID.
 - `POST /api/users` - Create a new user.
 - `PUT /api/users/:id` - Update a user by its ID.
-- `DELETE /api/todos/:id` - Delete a user by its ID.
+- `DELETE /api/users/:id` - Delete a user by its ID.
 
 For detailed information about the API endpoints and request/response formats, refer to the API documentation provided by the project.
