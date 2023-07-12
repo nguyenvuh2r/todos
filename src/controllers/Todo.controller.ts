@@ -20,7 +20,6 @@ class TodoController {
     try {
       const service: TodoService = new TodoService(req);
       const todo = await service.create();
-      console.log(todo);
       return res.send({
         data: todo,
         message: "Create Todo Success"

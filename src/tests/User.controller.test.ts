@@ -3,7 +3,6 @@ import request from 'supertest';
 import { starServer } from '../app';
 describe('App', () => {
   let app :any;
-  let server : any;
   before(() => {
     app = starServer(3001)
   });
@@ -57,7 +56,7 @@ describe('App', () => {
     const deleteResponse = await request(app).delete(`/api/users/${userId}`);
     expect(deleteResponse.status).to.equal(200);
   });
-  // after((done) => {
-  //   server.close(done);
-  // });
+  after((done) => {
+    app.close(done);
+  });
 });
