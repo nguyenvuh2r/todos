@@ -2,9 +2,7 @@ import { Request } from "express";
 import db from '../db/models';
 import { UserInputDTO } from "../DTO/UserInputDTO";
 class UserService {
-  constructor(){
 
-  }
   getAll = async (page:number, limit:number) => {
     const DB: any = db;
     const { count, rows } = await DB.User.findAndCountAll ({
@@ -29,19 +27,16 @@ class UserService {
       },
       attributes: ['id', 'firstName', 'lastName', 'email'],
     });
-
     return user;
   }
 
   update = async (id:string, userInput: UserInputDTO) => {
     const DB: any = db;
-
     const user = await DB.User.update(userInput, {
       where: {
           id: id,
       },
     });
-
     return user;
   }
 
