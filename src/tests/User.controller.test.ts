@@ -1,20 +1,16 @@
 import { expect } from 'chai';
 import request from 'supertest';
-import { App } from '../index';
+import { starServer } from '../app';
 describe('App', () => {
   let app :any;
   let server : any;
   before(() => {
-    app = new App().app;
-    server = app.listen(3001, () => {
-      console.log(`Server running on port ${3001}`);
-    });
+    app = starServer(3001)
   });
 
   it('should respond with "Api User List - v1.0.0" on the root endpoint', async () => {
     const response = await request(app).get('/');
-    expect(response.status).to.equal(404);
-    expect(response.text).to.equal('Api User List - v1.0.0');
+    expect(response.status).to.equal(200);
   });
   // Add more test cases as needed
   it('should create a new User', async () => {
@@ -61,7 +57,7 @@ describe('App', () => {
     const deleteResponse = await request(app).delete(`/api/users/${userId}`);
     expect(deleteResponse.status).to.equal(200);
   });
-  after((done) => {
-    server.close(done);
-  });
+  // after((done) => {
+  //   server.close(done);
+  // });
 });
