@@ -46,7 +46,7 @@ class UserController {
         statusCode : ERROR_CODE
       }
       return res.status(ERROR_CODE).send(respone)
-    } catch (error) {
+    }catch (error) {
       return res.status(ERROR_CODE).send(error)
     }
   }

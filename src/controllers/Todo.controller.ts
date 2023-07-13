@@ -1,9 +1,13 @@
 import { Request, Response } from "express";
 import TodoService from "../services/Todo.service";
+import { ERROR_CODE, NOT_FOUND_CODE, SUCCSESS_CODE } from "../const/status"
 import { TodoInput } from "../input/TodoInput";
+import { TodoOutput } from "../ouput/TodoOutput";
 import UserService from "../services/User.service";
 import { CustomRequest } from "../middlewares/Auth.middleware";
 import { UserOutPut } from "../ouput/UserOutPut";
+import { ListRespone } from "../ouput/CommonOutput";
+import { Respone as ResponeOutPut } from "../ouput/CommonOutput";
 
 class TodoController {
 
@@ -16,45 +20,77 @@ class TodoController {
 
   index = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const todos = await this.todoService.getAll();
-      return res.send({
-        data: todos,
-        message: "Success Get All Todo List"
-      });
+      const page = parseInt(String(req.query.page)) || 1;
+      const limit = parseInt(String(req.query.limit)) || 10;
+      const userId = String(req.params.userId);
+      const user :UserOutPut | null  = await this.userService.getOne(userId);
+      if(!user)
+      {
+        return res.status(NOT_FOUND_CODE).send("Not found user!");
+      }
+
+      const data: ListRespone<TodoOutput> = await this.todoService.getAll(parseInt(userId), page, limit);
+      const respone: ResponeOutPut<ListRespone<TodoOutput>> = {
+        data: data,
+        message: "Success Get All Todos List",
+        statusCode: SUCCSESS_CODE
+      }
+      return res.status(SUCCSESS_CODE).send(respone);
     } catch (error) {
-      return res.send(error)
+      return res.status(ERROR_CODE).send(error);
     }
   }
 
   create = async (req: Request, res: Response): Promise<Response> => {
     try {
       const todoInput : TodoInput = req.body;
-      const username = (req as CustomRequest).token
-      const user :UserOutPut | null  = await this.userService.getByUserName(username);
-      if(user)
+
+      const user :UserOutPut | null  = await this.userService.getOne(String(todoInput.userId));
+      if (user)
       {
         todoInput.userId = user?.id;
       }
-      const todo = await this.todoService.create(todoInput);
-      return res.send({
-        data: todo,
-        message: "Create Todo Success"
-      })
+      const result = await this.todoService.create(todoInput);
+      if (result) {
+        const respone : ResponeOutPut<number> = {
+          data : result,
+          message : "Create Todo Succsess",
+          statusCode : SUCCSESS_CODE
+        }
+        return res.status(SUCCSESS_CODE).send(respone);
+      }
+
+      const respone : ResponeOutPut<null> = {
+        data : null,
+        message : "Create Todo Failed",
+        statusCode : ERROR_CODE
+      }
+      return res.status(ERROR_CODE).send(respone);
     } catch (error) {
-      return res.send(error)
+      return res.send(error);
     }
   }
 
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
       const todoId = req.params.id;
-      const todo = await this.todoService.getOne(todoId);
-      return res.send({
-          data: todo,
-          message: "Get Todo by id => " + todo.id
-      })
+      const result = await this.todoService.getOne(todoId);
+      if (result) {
+        const respone : ResponeOutPut<TodoOutput> = {
+          data : result,
+          message : "Get Todo Success",
+          statusCode : SUCCSESS_CODE
+        }
+        return res.status(SUCCSESS_CODE).send(respone);
+      }
+      const respone : ResponeOutPut<null> = {
+        data : null,
+        message : "Get Todo Failed",
+        statusCode : ERROR_CODE
+      }
+      return res.status(ERROR_CODE).send(respone);
     } catch (error) {
-      return res.send(error);
+      return res.status(ERROR_CODE).send(error);
     }
   }
 
@@ -62,24 +98,46 @@ class TodoController {
     try {
       const todoId = req.params.id;
       const todoInput : TodoInput = req.body;
-      const todo = await this.todoService.update(todoId,todoInput);
-      return res.send({
-        message: `Update Todo success`
-      })
+      const result = await this.todoService.update(todoId, todoInput);
+      if (result) {
+        const respone : ResponeOutPut<null> = {
+          data : null,
+          message : "Updated Todo Success",
+          statusCode : SUCCSESS_CODE
+        }
+        return res.status(SUCCSESS_CODE).send(respone);
+      }
+      const respone : ResponeOutPut<null> = {
+        data : null,
+        message : "Update Todo Failed !",
+        statusCode : ERROR_CODE
+      }
+      return res.status(ERROR_CODE).send(respone);
     } catch (error) {
-      return res.send(error);
+      return res.status(ERROR_CODE).send(error);
     }
   }
 
   delete = async (req: Request, res: Response): Promise<Response> => {
     try {
       const todoId = req.params.id;
-      const todo = this.todoService.delete(todoId);
-      return res.send({
-        message: "Delete Todo Success"
-      })
+      const result = await this.todoService.delete(todoId);
+      if (result){
+        const respone : ResponeOutPut<null> = {
+          data : null,
+          message : "Deleted Todo Success",
+          statusCode : SUCCSESS_CODE
+        }
+        return res.status(SUCCSESS_CODE).send(respone);
+      }
+      const respone : ResponeOutPut<null> = {
+        data : null,
+        message : "Deleted Todo Failed !",
+        statusCode : ERROR_CODE
+      }
+      return res.status(ERROR_CODE).send(respone);
     } catch (error) {
-      return res.send(error);
+      return res.status(ERROR_CODE).send(error);
     }
   }
 }

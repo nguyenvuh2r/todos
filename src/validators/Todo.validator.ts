@@ -2,8 +2,9 @@ import { Request, Response, NextFunction } from 'express'
 import { check, validationResult } from 'express-validator'
 
 const createValidate = [
-  check('description').isString(),
-  check('title').isString(),
+  check('userId').isNumeric(),
+  check('description').isString().notEmpty(),
+  check('title').isString().notEmpty(),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
 
@@ -16,8 +17,9 @@ const createValidate = [
 ];
 
 const updateValidate = [
-  check('description').isString(),
-  check('title').isString(),
+  check('description').isString().notEmpty(),
+  check('title').isString().notEmpty(),
+  check('isCompleted').isBoolean(),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
 
