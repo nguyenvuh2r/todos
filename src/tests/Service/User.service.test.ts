@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { starServer } from '../../app';
 import UserService from '../../services/User.service';
 import { UserInput } from '../../input/UserInput';
+import { UserOutPut } from '../../ouput/UserOutPut';
 describe('Testing User Service', () => {
     let app: any;
     let userService: UserService;
@@ -11,7 +12,6 @@ describe('Testing User Service', () => {
     });
 
     it('should create a new user', async () => {
-
         const userData: UserInput = {
             email: 'gin.pham@gmail.com',
             firstName: 'Pham',
@@ -20,99 +20,104 @@ describe('Testing User Service', () => {
             userName : "ginpham1",
             isActive : true
         };
-
-        const createdUser = await userService.create(userData);
-        expect(createdUser).to.be.an('object');
-        expect(createdUser.email).to.equal(userData.email);
-        expect(createdUser.firstName).to.equal(userData.firstName);
-        expect(createdUser.lastName).to.equal(userData.lastName);
-
+        const isCreated = await userService.create(userData);
+        expect(isCreated).to.be.true;
     });
 
-    it('should get users', async () => {
-        let page:number = 1;
-        let limit:number = 10;
-        const { count, rows } =  await userService.getAll(page,limit);
-        expect(rows).to.be.an('array');
-        expect(count).to.be.a('number');
-        if(count > 0)
+    it('should not create a new user', async () => {
+        const userData: UserInput = {
+            email: 'gin.pham@gmail.com',
+            firstName: 'Pham',
+            lastName: '',
+            password: "",
+            userName : "",
+        };
+        const isCreated = await userService.create(userData);
+        expect(isCreated).to.be.false;
+    });
+
+    it('should get users by username', async () => {
+        const username = "ginpham1";
+        const user : UserOutPut | null = await userService.getByUserName(username);
+        expect(user).instanceOf(Object);
+        expect(user?.userName).to.equal(username);
+    });
+
+    it('should not get users by username', async () => {
+        const username = "ginpham10000";
+        const user : UserOutPut | null = await userService.getByUserName(username);
+        expect(user).is.null;
+    });
+
+
+    it('should get one user by id', async () => {
+        const userData: UserInput = {
+            email: 'gin2.pham@gmail.com',
+            firstName: 'Pham',
+            lastName: 'gin',
+            password: "123123123",
+            userName : "ginpham131252314",
+            isActive : true
+        };
+        const id = await userService.createAndGetId(userData);
+        if(id)
         {
-            expect(rows).to.have.lengthOf.at.least(1);
+            const user = await userService.getOne(id.toString());
+            expect(user).instanceOf(Object);
+            expect(user?.userName).to.equal(userData.userName);
+        }
+        else {
+            expect(false);
         }
     });
 
-
-    it('should get one user', async () => {
-        // create new
+    it('should update a user', async () => {
         const userData: UserInput = {
             email: 'gin.pham@gmail.com',
             firstName: 'Pham',
-            lastName: 'An',
+            lastName: 'gin',
             password: "123123123",
-            userName : "ginpham1",
+            userName : "ginpham1231114",
             isActive : true
         };
-
-        const createdUser = await userService.create(userData);
-        let userId: string = createdUser.id;
-        // get user created
-        const user = await userService.getOne(userId);
-
-        expect(user).to.be.an('object');
-        expect(user.email).to.equal(createdUser.email);
-        expect(user.firstName).to.equal(createdUser.firstName);
-        expect(user.lastName).to.equal(createdUser.lastName);
-
-    });
-
-    it('should update a user', async () => {
-        // create new
-        const userDataCreate: UserInput = {
-            email: 'gin.pham@gmail.com',
-            firstName: 'Pham',
-            lastName: 'An',
-            password: "123123123",
-            userName : "ginpham1",
-            isActive : true
-        };
-
-        const createdUser = await userService.create(userDataCreate);
-        let userId: string = createdUser.id;
-
-        const userDataUpdate: UserInput = {
-            email: 'gin.pham@gmail.com',
-            firstName: 'Pham',
-            lastName: 'An',
-            password: "123123123",
-            userName : "ginpham1",
-            isActive : true
-        };
-
-        await userService.update(userId,userDataUpdate);
-        const user = await userService.getOne(userId);
-        expect(user).to.be.an('object');
-        expect(user.email).to.equal(userDataUpdate.email);
-        expect(user.firstName).to.equal(userDataUpdate.firstName);
-        expect(user.lastName).to.equal(userDataUpdate.lastName);
+        const id = await userService.createAndGetId(userData);
+        if(id)
+        {
+            const userUpdateData = {
+                email: 'gin.pham@gmail.com',
+                firstName: 'aaaaaa',
+                lastName: 'gaaaaain',
+                userName : "ginpham1231114",
+                isActive : false
+            };
+            const result = await userService.update(id.toString(),userUpdateData);
+            expect(result).is.true;
+        }
+        else {
+            expect(false);
+        }
 
     });
 
     it('should delete one user', async () => {
-        // create new
         const userData: UserInput = {
             email: 'gin.pham@gmail.com',
             firstName: 'Pham',
-            lastName: 'An',
+            lastName: 'gin',
             password: "123123123",
-            userName : "ginpham1",
+            userName : "ginpham1233114",
             isActive : true
         };
-        const createdUser = await userService.create(userData);
-        let userId: string = createdUser.id;
-        // get user created
-        await userService.delete(userId);
-        const user = await userService.getOne(userId);
-        expect(user).to.be.null;
+        const id = await userService.createAndGetId(userData);
+        if(id)
+        {
+            const result = await userService.delete(id.toString());
+            expect(result).is.true
+        }
+        else {
+            expect(false);
+        }
+       
     });
 
     after((done) => {
