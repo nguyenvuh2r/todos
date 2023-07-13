@@ -16,7 +16,7 @@ describe('Testing Todo Service', () => {
         const todoInput: TodoInput = {
             description : "hello",
             title : "word",
-            userId : "55"
+            userId : 55
         };
 
         const todo = await todoService.create(todoInput);
@@ -38,7 +38,7 @@ describe('Testing Todo Service', () => {
         const todoInput: TodoInput = {
             description : "hello",
             title : "word",
-            userId : "55"
+            userId : 55
         };
 
         const todoCreated = await todoService.create(todoInput);
@@ -58,7 +58,7 @@ describe('Testing Todo Service', () => {
         const todoInput: TodoInput = {
             description : "hello",
             title : "word",
-            userId : "55"
+            userId : 55
         };
 
         const todoCreated = await todoService.create(todoInput);
@@ -67,7 +67,7 @@ describe('Testing Todo Service', () => {
         const todoUpdate: TodoInput = {
             description : "hello1",
             title : "word1",
-            userId : "55"
+            userId : 55
         };
 
         await todoService.update(todoId,todoUpdate);
@@ -84,7 +84,7 @@ describe('Testing Todo Service', () => {
         const todoInput: TodoInput = {
             description : "hello",
             title : "word",
-            userId : "55"
+            userId : 55
         };
         const todoCreated = await todoService.create(todoInput);
         let todoId: string = todoCreated.id;
