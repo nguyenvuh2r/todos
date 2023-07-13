@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import UserService from "../services/User.service";
 import { ERROR_CODE, NOT_FOUND_CODE, SUCCSESS_CODE } from "../const/status"
 import { UserInput } from "../input/UserInput";
-
+import { ListRespone } from "../ouput/CommonOutput";
+import { UserOutPut } from "../ouput/UserOutPut";
+import { Respone as ResponeOutPut } from "../ouput/CommonOutput";
 class UserController {
   private userService: UserService;
   constructor() {
@@ -13,34 +15,37 @@ class UserController {
     try {
       const page = parseInt(String(req.query.page)) || 1;
       const limit = parseInt(String(req.query.limit)) || 10;
-      const { count, rows } = await this.userService.getAll(page, limit);
-      const respone = {
-        data: rows,
-        pagination: {
-          total: count,
-          current_page: page,
-          per_page: limit
-        }
+      const data: ListRespone<UserOutPut> = await this.userService.getAll(page, limit);
+      const respone: ResponeOutPut<ListRespone<UserOutPut>> = {
+        data: data,
+        message: "Success Get All Users List",
+        statusCode: SUCCSESS_CODE
       }
-      return res.status(SUCCSESS_CODE).send({
-        data: respone,
-        message: "Success Get All Users List"
-      });
+      return res.status(SUCCSESS_CODE).send(respone);
     } catch (error) {
-         console.log(error);
-         
-         return res.status(ERROR_CODE).send(error)
+      return res.status(ERROR_CODE).send(error)
     }
   }
 
   create = async (req: Request, res: Response): Promise<Response> => {
     try {
       const userInput: UserInput = req.body;
-      const user = await this.userService.create(userInput);
-      return res.status(SUCCSESS_CODE).send({
-        data: user,
-        message: "Create User Success"
-      })
+      const result = await this.userService.create(userInput);
+      if(result)
+      {
+        const respone : ResponeOutPut<null> = {
+          data : null,
+          message : "Create User Succsess",
+          statusCode : SUCCSESS_CODE
+        }
+        return res.status(SUCCSESS_CODE).send(respone)
+      }
+      const respone : ResponeOutPut<null> = {
+        data : null,
+        message : "Create User Faild",
+        statusCode : ERROR_CODE
+      }
+      return res.status(ERROR_CODE).send(respone)
     } catch (error) {
       return res.status(ERROR_CODE).send(error)
     }
@@ -49,16 +54,21 @@ class UserController {
   show = async (req: Request, res: Response): Promise<Response> => {
     try {
       const userId = req.params.id
-      const user = await this.userService.getOne(userId)
-      if (user === null) {
-        return res.status(NOT_FOUND_CODE).send({
-          message: "Not found!"
-        });
+      const result : UserOutPut | null= await this.userService.getOne(userId)
+      if (result) {
+        const respone : ResponeOutPut<UserOutPut> = {
+          data : result,
+          message : "Get User Success",
+          statusCode : SUCCSESS_CODE
+        }
+        return res.status(SUCCSESS_CODE).send(respone)
       }
-      return res.status(SUCCSESS_CODE).send({
-        data: user,
-        message: "Get User by id => " + user.id
-      })
+      const respone : ResponeOutPut<null> = {
+        data : null,
+        message : "Create User Faild",
+        statusCode : ERROR_CODE
+      }
+      return res.status(ERROR_CODE).send(respone)
     } catch (error) {
       return res.status(ERROR_CODE).send(error);
     }
@@ -68,16 +78,21 @@ class UserController {
     try {
       const userId = req.params.id;
       const userInput: UserInput = req.body
-      const user = await this.userService.update(userId, userInput);
-      if (user === null) {
-        return res.status(NOT_FOUND_CODE).send({
-          message: "Not found!"
-        })
+      const result = await this.userService.update(userId, userInput);
+      if (result) {
+        const respone : ResponeOutPut<null> = {
+          data : null,
+          message : "Updated User Success",
+          statusCode : SUCCSESS_CODE
+        }
+        return res.status(SUCCSESS_CODE).send(respone)
       }
-      return res.status(SUCCSESS_CODE).send({
-        data: user,
-        message: `Update User success`
-      })
+      const respone : ResponeOutPut<null> = {
+        data : null,
+        message : "Create User Faild !",
+        statusCode : ERROR_CODE
+      }
+      return res.status(ERROR_CODE).send(respone)
     } catch (error) {
       return res.status(ERROR_CODE).send(error);
     }
@@ -86,13 +101,23 @@ class UserController {
   delete = async (req: Request, res: Response): Promise<Response> => {
     try {
       const userId = req.params.id;
-      const user = await this.userService.delete(userId);
-      return res.status(SUCCSESS_CODE).send({
-        data: user,
-        message: "Delete Todo Success"
-      })
+      const result = await this.userService.delete(userId);
+      if(result){
+        const respone : ResponeOutPut<null> = {
+          data : null,
+          message : "Deleted User Success",
+          statusCode : SUCCSESS_CODE
+        }
+        return res.status(SUCCSESS_CODE).send(respone)
+      }
+      const respone : ResponeOutPut<null> = {
+        data : null,
+        message : "Deleted User Faild !",
+        statusCode : ERROR_CODE
+      }
+      return res.status(ERROR_CODE).send(respone)
     } catch (error) {
-      return res.send(error); res.status(ERROR_CODE).send(error);
+      return res.status(ERROR_CODE).send(error);
     }
   }
 }

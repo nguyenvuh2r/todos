@@ -3,6 +3,7 @@ import TodoService from "../services/Todo.service";
 import { TodoInput } from "../input/TodoInput";
 import UserService from "../services/User.service";
 import { CustomRequest } from "../middlewares/Auth.middleware";
+import { UserOutPut } from "../ouput/UserOutPut";
 
 class TodoController {
 
@@ -29,8 +30,11 @@ class TodoController {
     try {
       const todoInput : TodoInput = req.body;
       const username = (req as CustomRequest).token
-      const user = await this.userService.getByUserName(username);
-      todoInput.userId = user.id;
+      const user :UserOutPut | null  = await this.userService.getByUserName(username);
+      if(user)
+      {
+        todoInput.userId = user?.id;
+      }
       const todo = await this.todoService.create(todoInput);
       return res.send({
         data: todo,
