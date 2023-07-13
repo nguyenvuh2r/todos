@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { starServer } from '../../app';
 import UserService from '../../services/User.service';
-import { UserInputDTO } from '../../DTO/UserInputDTO';
+import { UserInput } from '../../input/UserInput';
 describe('Testing User Service', () => {
     let app: any;
     let userService: UserService;
@@ -12,10 +12,13 @@ describe('Testing User Service', () => {
 
     it('should create a new user', async () => {
 
-        const userData: UserInputDTO = {
+        const userData: UserInput = {
             email: 'gin.pham@gmail.com',
             firstName: 'Pham',
-            lastName: 'An'
+            lastName: 'An',
+            password: "123123123",
+            userName : "ginpham1",
+            isActive : true
         };
 
         const createdUser = await userService.create(userData);
@@ -41,10 +44,13 @@ describe('Testing User Service', () => {
 
     it('should get one user', async () => {
         // create new
-        const userData: UserInputDTO = {
+        const userData: UserInput = {
             email: 'gin.pham@gmail.com',
             firstName: 'Pham',
-            lastName: 'An'
+            lastName: 'An',
+            password: "123123123",
+            userName : "ginpham1",
+            isActive : true
         };
 
         const createdUser = await userService.create(userData);
@@ -61,19 +67,25 @@ describe('Testing User Service', () => {
 
     it('should update a user', async () => {
         // create new
-        const userDataCreate: UserInputDTO = {
+        const userDataCreate: UserInput = {
             email: 'gin.pham@gmail.com',
             firstName: 'Pham',
-            lastName: 'An'
+            lastName: 'An',
+            password: "123123123",
+            userName : "ginpham1",
+            isActive : true
         };
 
         const createdUser = await userService.create(userDataCreate);
         let userId: string = createdUser.id;
 
-        const userDataUpdate: UserInputDTO = {
+        const userDataUpdate: UserInput = {
             email: 'gin.pham@gmail.com',
             firstName: 'Pham',
-            lastName: 'An'
+            lastName: 'An',
+            password: "123123123",
+            userName : "ginpham1",
+            isActive : true
         };
 
         await userService.update(userId,userDataUpdate);
@@ -87,10 +99,13 @@ describe('Testing User Service', () => {
 
     it('should delete one user', async () => {
         // create new
-        const userData: UserInputDTO = {
+        const userData: UserInput = {
             email: 'gin.pham@gmail.com',
             firstName: 'Pham',
-            lastName: 'An'
+            lastName: 'An',
+            password: "123123123",
+            userName : "ginpham1",
+            isActive : true
         };
         const createdUser = await userService.create(userData);
         let userId: string = createdUser.id;
